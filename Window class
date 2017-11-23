@@ -1,0 +1,39 @@
+package LocalChat;
+
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+class Window implements ActionListener{
+    JTextArea textArea;
+    JTextField textField;
+    Connection chat;
+    
+    Window(Connection theChat){
+        chat = theChat;
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(400,400));
+
+        JPanel primary = new JPanel();
+        
+        textArea = new JTextArea(5,20);
+        textField = new JTextField(20);
+        textField.addActionListener(this);
+        primary.setLayout(new BorderLayout());
+        primary.add(textField, BorderLayout.SOUTH);
+        primary.add(textArea, BorderLayout.CENTER);
+        
+        frame.add(primary);
+        frame.pack();
+        frame.setVisible(true);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String text = textField.getText();
+        chat.sendMessage(text);
+        
+        textArea.append(text + "\n");
+    }
+}
