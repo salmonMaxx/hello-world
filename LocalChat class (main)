@@ -1,0 +1,26 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package LocalChat;
+
+import java.io.IOException;
+
+/**
+ *
+ * @author maxxw
+ */
+public class LocalChat {
+    public static void main(String[] args){
+        try{
+            Connection chat = new Connection(1234);
+            Window theWindow = new Window(chat);
+            chat.server();
+            chat.setReady();
+            chat.client();
+            chat.sendMessage("Hello world!");
+        }
+        catch(IOException e){System.out.println(e.getMessage());}
+    }
+}
