@@ -14,7 +14,7 @@ class Window implements ActionListener{
         chat = theChat;
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400,400));
+        frame.setPreferredSize(new Dimension(600,400));
 
         JPanel primary = new JPanel();
         
