@@ -36,4 +36,5 @@ class Window implements ActionListener{
         
         textArea.append(text + "\n");
     }
+    //hej
 }
