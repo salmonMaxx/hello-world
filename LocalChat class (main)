@@ -13,6 +13,7 @@ import java.net.*;
  *  - Knapp för att avsluta
  *  - JDialogue för chattavslut
  *  - Förbindelsen ska kopplas ned och avslutas
+ *  - SKROLLLLLL
  */
 public class LocalChat {
     public static void main(String[] args){
