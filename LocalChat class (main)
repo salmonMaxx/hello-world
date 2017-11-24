@@ -6,6 +6,7 @@
 package LocalChat;
 
 import java.io.IOException;
+import java.net.*;
 
 /**
  *
@@ -14,12 +15,15 @@ import java.io.IOException;
 public class LocalChat {
     public static void main(String[] args){
         try{
-            Connection chat = new Connection(1234);
-            Window theWindow = new Window(chat);
-            chat.server();
-            chat.setReady();
-            chat.client();
-            chat.sendMessage("Hello world!");
+            //fixa booleanen!!!!!!!!!!!!!!!!!!!!! 
+            boolean isServer = false;
+            int port = 14854;
+            if(isServer){
+                Server server = new Server(port);
+                isServer = !isServer;
+            }
+            String IP = InetAddress.getLocalHost().getHostAddress();
+            Client client = new Client(IP, port);
         }
         catch(IOException e){System.out.println(e.getMessage());}
     }
