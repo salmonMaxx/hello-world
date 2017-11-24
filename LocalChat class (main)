@@ -9,19 +9,21 @@ import java.io.IOException;
 import java.net.*;
 
 /**
- *
- * @author maxxw
+ *  KVAR:
+ *  - Knapp för att avsluta
+ *  - JDialogue för chattavslut
+ *  - Förbindelsen ska kopplas ned och avslutas
  */
 public class LocalChat {
     public static void main(String[] args){
-        try{
             //fixa booleanen!!!!!!!!!!!!!!!!!!!!! 
-            boolean isServer = false;
-            int port = 14854;
+            boolean isServer = true;
+            int port = 58987;
             if(isServer){
                 Server server = new Server(port);
                 isServer = !isServer;
             }
+        try{
             String IP = InetAddress.getLocalHost().getHostAddress();
             Client client = new Client(IP, port);
         }
