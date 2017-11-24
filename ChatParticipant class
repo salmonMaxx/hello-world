@@ -21,9 +21,22 @@ public class ChatParticipant implements ActionListener, ObjectStreamListener {
     ChatParticipant(Socket theSocket) throws IOException{
         name = this.toString();
         socket = theSocket;
+        try{
         createTextStreams(socket);
         createTheWindow();
-        
+        }
+        catch(IOException e){
+            e.getMessage();
+        }
+        finally{
+            try{
+                out.close();
+                in.close();
+            }
+            catch(IOException e){
+                System.out.println("Streams can't close");
+            }
+        }
     }
     
         public void createTextStreams(Socket socket) throws IOException{
