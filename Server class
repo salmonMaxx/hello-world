@@ -4,14 +4,25 @@ import java.io.*;
 import java.net.*;
 
 public class Server {
-    private final ServerSocket server;
-    private final Socket theSocket;
+    ServerSocket server;
+    Socket theSocket;
     
-    Server(int portNumber) throws IOException{
+    Server(int portNumber){
+        try{
         server = new ServerSocket(portNumber);
         theSocket = serverConnect();
         server.close();
         ChatParticipant Rolf = new ChatParticipant(theSocket);
+        }
+        catch(Exception e){e.getMessage();}
+        finally{
+            try{
+                server.close();
+            }
+            catch(IOException e){
+                System.out.println("Server can't close");
+            }
+        }
     }
         public Socket serverConnect() throws IOException{
             Socket serverSocket = server.accept();
