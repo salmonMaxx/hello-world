@@ -1,0 +1,93 @@
+package LocalChat;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import javax.swing.*;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class ChatParticipant implements ActionListener, ObjectStreamListener {
+    Socket socket;
+    OutputStream outputStream;
+    ObjectOutputStream out;
+    InputStream inputStream;
+    ObjectInputStream in;
+    JTextArea textArea;
+    JTextField textField;
+    String name;
+    ChatParticipant(Socket theSocket) throws IOException{
+        name = this.toString();
+        socket = theSocket;
+        createTextStreams(socket);
+        createTheWindow();
+        
+    }
+    
+        public void createTextStreams(Socket socket) throws IOException{
+            outputStream = socket.getOutputStream();
+            out = new ObjectOutputStream(outputStream);
+            //se till att det inte är buggigt
+            inputStream = socket.getInputStream();
+            in = new ObjectInputStream(inputStream);
+            
+            //skapa Manager!!!!!
+            ObjectStreamManager manager = new ObjectStreamManager(1, in, this);
+        }
+       // @Override
+        public void objectReceived(int number, Object object, Exception exception) {
+            String message = (String) object;
+            if(message == null){
+               textArea.append("Other participant left the chat."); // sätt in namn ist.
+            }
+            else {
+            textArea.append(name + " says:" + "\n" + message + "\n");
+            }
+        }
+        public void createTheWindow(){
+            JFrame frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setPreferredSize(new Dimension(400,400));
+
+            JPanel primary = new JPanel();
+            primary.setLayout(new BorderLayout());
+            
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new BorderLayout());
+            JButton send = new JButton("send");
+            send.addActionListener(this);
+            buttonPanel.add(send, BorderLayout.SOUTH);
+            
+            JPanel chatPanel = new JPanel();
+            textArea = new JTextArea(5,20);
+            textArea.setEditable(false);
+            textField = new JTextField(20);
+            chatPanel.setLayout(new BorderLayout());
+            chatPanel.add(textField, BorderLayout.SOUTH);
+            chatPanel.add(textArea, BorderLayout.CENTER);
+
+            primary.add(chatPanel, BorderLayout.CENTER);
+            primary.add(buttonPanel, BorderLayout.EAST);
+            frame.add(primary);
+            frame.pack();
+            frame.setVisible(true);
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String text = textField.getText();
+            textArea.append(name + "says:" + "\n" + text + "\n");
+        try {
+            out.writeObject(text + "\n");
+        } 
+        catch (IOException ex) {
+            ex.getMessage();
+        }
+            textField.setText("");
+    }
+        public void closeTheStreams() throws IOException{
+            inputStream.close();
+            outputStream.close();
+        }
+}
