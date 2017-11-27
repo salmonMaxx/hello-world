@@ -1,4 +1,4 @@
-package LocalChat;
+package Internet;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,15 +9,18 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ChatParticipant implements ActionListener, ObjectStreamListener {
+public class ChatParticipant implements ActionListener, KeyListener, ObjectStreamListener {
     Socket socket;
     OutputStream outputStream;
     ObjectOutputStream out;
     InputStream inputStream;
     ObjectInputStream in;
+    JFrame frame;
     JTextArea textArea;
     JTextField textField;
     String name;
+    JButton send;
+    JButton logOff;
     ChatParticipant(Socket theSocket) throws IOException{
         name = this.toString();
         socket = theSocket;
@@ -27,15 +30,6 @@ public class ChatParticipant implements ActionListener, ObjectStreamListener {
         }
         catch(IOException e){
             e.getMessage();
-        }
-        finally{
-            try{
-                out.close();
-                in.close();
-            }
-            catch(IOException e){
-                System.out.println("Streams can't close");
-            }
         }
     }
     
@@ -49,19 +43,20 @@ public class ChatParticipant implements ActionListener, ObjectStreamListener {
             //skapa Manager!!!!!
             ObjectStreamManager manager = new ObjectStreamManager(1, in, this);
         }
-       // @Override
+        @Override
         public void objectReceived(int number, Object object, Exception exception) {
             String message = (String) object;
-            if(message == null){
-               textArea.append("Other participant left the chat."); // sätt in namn ist.
-            }
-            else {
-            textArea.append(name + " says:" + "\n" + message + "\n");
+            if(message == null){}
+            if(message != null){
+                if(message.equals("iHaveLoggedOut")){
+                    createDialog();
+                }  
+            textArea.append("Golf says:\n" + message + "\n");
             }
         }
         public void createTheWindow(){
-            JFrame frame = new JFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //EXIT_ON_CLOSE
             frame.setPreferredSize(new Dimension(400,400));
 
             JPanel primary = new JPanel();
@@ -69,18 +64,24 @@ public class ChatParticipant implements ActionListener, ObjectStreamListener {
             
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new BorderLayout());
-            JButton send = new JButton("send");
+            send = new JButton("send");
             send.addActionListener(this);
+            logOff = new JButton("log-off");
+            logOff.addActionListener(this);
             buttonPanel.add(send, BorderLayout.SOUTH);
+            buttonPanel.add(logOff,BorderLayout.NORTH);
             
             JPanel chatPanel = new JPanel();
             textArea = new JTextArea(5,20);
             textArea.setEditable(false);
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setPreferredSize(new Dimension(5,20));
             textField = new JTextField(20);
             chatPanel.setLayout(new BorderLayout());
             chatPanel.add(textField, BorderLayout.SOUTH);
-            chatPanel.add(textArea, BorderLayout.CENTER);
-
+            chatPanel.add(scrollPane, BorderLayout.CENTER);
+            textField.addKeyListener(this);
+            
             primary.add(chatPanel, BorderLayout.CENTER);
             primary.add(buttonPanel, BorderLayout.EAST);
             frame.add(primary);
@@ -89,18 +90,67 @@ public class ChatParticipant implements ActionListener, ObjectStreamListener {
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            String text = textField.getText();
-            textArea.append(name + "says:" + "\n" + text + "\n");
-        try {
-            out.writeObject(text + "\n");
-        } 
-        catch (IOException ex) {
-            ex.getMessage();
+            if(e.getSource() == send){
+                String text = textField.getText();
+                textArea.append("Rolf says:\n" +text + "\n");
+                try {
+                    out.writeObject(text);
+                } 
+                catch (IOException ex) {
+                    ex.getMessage();
+                }
+                    textField.setText("");
+            }
+            if(e.getSource() == logOff){
+                try {
+                    out.writeObject("iHaveLoggedOut");
+                    closeStreamsAndSockets();
+                    frame.dispose();
+                } 
+                catch (IOException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
         }
-            textField.setText("");
-    }
-        public void closeTheStreams() throws IOException{
-            inputStream.close();
+        public void closeStreamsAndSockets() throws IOException{
             outputStream.close();
+            socket.close();
+            //lägg till socket
         }
+        
+        public void createDialog(){
+            JDialog theBox = new JDialog(frame, "Other part left!!!!!", false);
+            theBox.setSize(new Dimension(20,20));
+            JButton close = new JButton("Close chat.");
+            close.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    theBox.dispose();
+                    frame.dispose();
+                }
+            });
+            theBox.getContentPane().add(close, BorderLayout.SOUTH);
+            try{
+                closeStreamsAndSockets();
+            }
+            catch(IOException e){
+                System.out.println(e.getMessage());
+            }
+            theBox.pack();
+            theBox.setVisible(true);
+            theBox.getDefaultCloseOperation();  
+        }
+
+    @Override
+    public void keyTyped(KeyEvent ke) {
+        
+    }
+
+    @Override
+    public void keyPressed(KeyEvent ke) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent ke) {
+    }
 }
