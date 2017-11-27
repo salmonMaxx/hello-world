@@ -3,22 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LocalChat;
+package Internet;
 
 import java.io.IOException;
 import java.net.*;
 
 /**
  *  KVAR:
- *  - Knapp för att avsluta
- *  - JDialogue för chattavslut
- *  - Förbindelsen ska kopplas ned och avslutas
  *  - SKROLLLLLL
  */
-public class LocalChat {
+public class ChatMain{
     public static void main(String[] args){
-            //fixa booleanen!!!!!!!!!!!!!!!!!!!!! 
-            boolean isServer = true;
+            boolean isServer = false;
             int port = 58987;
             if(isServer){
                 Server server = new Server(port);
