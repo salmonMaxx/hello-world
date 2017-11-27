@@ -1,4 +1,4 @@
-package LocalChat;
+package Internet;
 
 import java.io.IOException;
 import java.net.*;
@@ -8,19 +8,12 @@ public class Client {
     
     Client(String IP, int theSocket){
         try{
-        socket = new Socket(IP, theSocket);
-        ChatParticipant Golf = new ChatParticipant(socket);
+            System.out.println("försöker öppna i client");
+            socket = new Socket(IP, theSocket);
+            ChatParticipant Golf = new ChatParticipant(socket);
         //skapa en participant
         }
         catch(IOException e){e.getMessage();}
-        finally {
-            try{
-                socket.close();
-            }
-            catch(IOException e){
-                System.out.println("Socket can't close");
-            }
-        }
     }
         
         public Socket getSocket(){
