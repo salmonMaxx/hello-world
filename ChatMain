@@ -14,6 +14,9 @@ import java.net.*;
  */
 public class ChatMain{
     public static void main(String[] args){
+//        ReadWriter rw;
+//        String dir = "C:\\Users\\maxxw\\OneDrive\\Dokument\\NetBeansProjects\\theText.txt";
+//        rw = new ReadWriter(dir);
             boolean isServer = false;
             int port = 58987;
             if(isServer){
