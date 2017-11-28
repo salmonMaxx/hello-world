@@ -1,0 +1,56 @@
+package Internet;
+
+import java.io.*;
+import java.util.ArrayList;
+
+public class ReadWriter {
+    FileReader fileReader;
+    BufferedReader buffReader;
+    FileWriter fileWriter;
+    String dir;
+    ArrayList<String> theList;
+    
+    ReadWriter(String theDir){      //the whole directory for the file
+        dir = theDir;
+        theList = new ArrayList<>();
+    }
+    public ArrayList<Contacts> loadContact(){
+        try {
+            fileReader = new FileReader(dir);
+            buffReader = new BufferedReader(fileReader);
+            String s;
+            while((s = buffReader.readLine()) != null){
+                theList.add(s);
+            }
+            ArrayList<Contacts> contactList = new ArrayList<>();
+            for(int index = 0; index < theList.size(); index++){
+                contactList.add(createContact(theList.get(index)));
+            }
+            fileReader.close();
+            return contactList;
+        } 
+        catch (IOException ex) {
+            ex.getMessage();
+            return null;
+        }
+    }
+    public void saveContact(Contacts theContact){
+        try{
+            fileWriter = new FileWriter(dir, true);
+            fileWriter.write(theContact.name + " " + theContact.IP + " " + theContact.port +"\n");
+            System.out.println("contact saved!");
+            fileWriter.close();
+        }
+        catch(IOException e){
+            e.getMessage();
+        }
+    }
+    Contacts createContact(String theString){
+        String[] contactArray = theString.split(" ");
+        String name = contactArray[0];
+        String IP = contactArray[1];
+        int port = Integer.parseInt(contactArray[2]);
+        Contacts theContact;
+        return theContact = new Contacts(name, IP, port);
+    } 
+}
