@@ -4,12 +4,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import javax.swing.*;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class ChatParticipant implements ActionListener, KeyListener, ObjectStreamListener {
+public class ChatParticipant implements ActionListener, ItemListener, ObjectStreamListener {
     Socket socket;
     OutputStream outputStream;
     ObjectOutputStream out;
@@ -21,12 +19,21 @@ public class ChatParticipant implements ActionListener, KeyListener, ObjectStrea
     String name;
     JButton send;
     JButton logOff;
+    JComboBox myFriends;
+    ReadWriter readWriter;
+    ArrayList<Contacts> contactArray;
+    
     ChatParticipant(Socket theSocket) throws IOException{
         name = this.toString();
         socket = theSocket;
         try{
-        createTextStreams(socket);
-        createTheWindow();
+            readWriter = new ReadWriter("C:\\Users\\maxxw\\OneDrive\\Dokument\\NetBeansProjects\\theText.txt");
+            createTextStreams(socket);
+            contactArray = readWriter.loadContact();
+            createTheWindow();
+            for (Contacts contact:contactArray){
+                System.out.println(contact.name);
+            }
         }
         catch(IOException e){
             e.getMessage();
@@ -57,12 +64,13 @@ public class ChatParticipant implements ActionListener, KeyListener, ObjectStrea
         public void createTheWindow(){
             frame = new JFrame();
             frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //EXIT_ON_CLOSE
-            frame.setPreferredSize(new Dimension(400,400));
+            frame.setPreferredSize(new Dimension(600,400));
 
             JPanel primary = new JPanel();
             primary.setLayout(new BorderLayout());
             
             JPanel buttonPanel = new JPanel();
+            buttonPanel.setPreferredSize(new Dimension(200,400));
             buttonPanel.setLayout(new BorderLayout());
             send = new JButton("send");
             send.addActionListener(this);
@@ -70,6 +78,17 @@ public class ChatParticipant implements ActionListener, KeyListener, ObjectStrea
             logOff.addActionListener(this);
             buttonPanel.add(send, BorderLayout.SOUTH);
             buttonPanel.add(logOff,BorderLayout.NORTH);
+            
+            JPanel comboPanel = new JPanel();
+            //String[] testArray = {"Kalle", "Pelle", "Golf", "Rolf"};//ta bort sen!
+            String[] nameArray = new String[contactArray.size()];
+            for (int index = 0; index < contactArray.size(); index++){
+                nameArray[index] = contactArray.get(index).name;
+            }
+            myFriends = new JComboBox(nameArray);
+            myFriends.addItemListener(this);
+            comboPanel.add(myFriends);
+            buttonPanel.add(comboPanel,  BorderLayout.CENTER);
             
             JPanel chatPanel = new JPanel();
             textArea = new JTextArea(5,20);
@@ -80,7 +99,6 @@ public class ChatParticipant implements ActionListener, KeyListener, ObjectStrea
             chatPanel.setLayout(new BorderLayout());
             chatPanel.add(textField, BorderLayout.SOUTH);
             chatPanel.add(scrollPane, BorderLayout.CENTER);
-            textField.addKeyListener(this);
             
             primary.add(chatPanel, BorderLayout.CENTER);
             primary.add(buttonPanel, BorderLayout.EAST);
@@ -112,6 +130,8 @@ public class ChatParticipant implements ActionListener, KeyListener, ObjectStrea
                 }
             }
         }
+        
+        
         public void closeStreamsAndSockets() throws IOException{
             outputStream.close();
             socket.close();
@@ -128,7 +148,7 @@ public class ChatParticipant implements ActionListener, KeyListener, ObjectStrea
                     theBox.dispose();
                     frame.dispose();
                 }
-            });
+                 });
             theBox.getContentPane().add(close, BorderLayout.SOUTH);
             try{
                 closeStreamsAndSockets();
@@ -142,15 +162,9 @@ public class ChatParticipant implements ActionListener, KeyListener, ObjectStrea
         }
 
     @Override
-    public void keyTyped(KeyEvent ke) {
-        
-    }
-
-    @Override
-    public void keyPressed(KeyEvent ke) {
-    }
-
-    @Override
-    public void keyReleased(KeyEvent ke) {
+    public void itemStateChanged(ItemEvent e) { //Lägg till "select" så den kan förändras
+        System.out.println(e.getSource());
     }
 }
+
+
