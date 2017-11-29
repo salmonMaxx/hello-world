@@ -21,7 +21,7 @@ public class ChatParticipant implements ActionListener, ItemListener, ObjectStre
     JButton logOff;
     JComboBox myFriends;
     ReadWriter readWriter;
-    ArrayList<Contacts> contactArray;
+    ArrayList<Contact> contactArray;
     
     ChatParticipant(Socket theSocket) throws IOException{
         name = this.toString();
@@ -31,9 +31,9 @@ public class ChatParticipant implements ActionListener, ItemListener, ObjectStre
             createTextStreams(socket);
             contactArray = readWriter.loadContact();
             createTheWindow();
-            for (Contacts contact:contactArray){
-                System.out.println(contact.name);
-            }
+//            for (Contact contact:contactArray){
+//                System.out.println(contact.name);
+//            }
         }
         catch(IOException e){
             e.getMessage();
@@ -43,11 +43,8 @@ public class ChatParticipant implements ActionListener, ItemListener, ObjectStre
         public void createTextStreams(Socket socket) throws IOException{
             outputStream = socket.getOutputStream();
             out = new ObjectOutputStream(outputStream);
-            //se till att det inte är buggigt
             inputStream = socket.getInputStream();
             in = new ObjectInputStream(inputStream);
-            
-            //skapa Manager!!!!!
             ObjectStreamManager manager = new ObjectStreamManager(1, in, this);
         }
         @Override
