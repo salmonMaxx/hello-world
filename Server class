@@ -9,12 +9,12 @@ public class Server {
     
     Server(int portNumber){
         try{
-        server = new ServerSocket(portNumber);
-        theSocket = serverConnect();
-        server.close();
-        ChatParticipant Rolf = new ChatParticipant(theSocket);
+            server = new ServerSocket(portNumber);
+            theSocket = serverConnect();
+            server.close();
+            ChatParticipant Rolf = new ChatParticipant(theSocket);
         }
-        catch(Exception e){e.getMessage();}
+            catch(Exception e){e.getMessage();}
     }
         public Socket serverConnect() throws IOException{
             Socket serverSocket = server.accept();
@@ -27,4 +27,5 @@ public class Server {
         public Socket getServerSocket(){
             return theSocket;
         }
+        
 }
