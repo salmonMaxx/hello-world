@@ -8,25 +8,24 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Client implements ItemListener, ActionListener{
-    Socket socket;
-    ReadWriter readWriter;
-    JFrame theFrame;
-    JComboBox selection;
-    JTextField contactName;
-    JTextField contactIP;
-    JTextField contactPort;
-    JDialog newContact;
+    private Socket socket;
+    private ReadWriter readWriter;
+    private JFrame theFrame;
+    private JComboBox selection;
+    private JTextField contactName;
+    private JTextField contactIP;
+    private JTextField contactPort;
+    private JDialog newContact;
+    private JDialog chooseContact;
     
     Client(){
+        System.out.println("creating client!! ");
         theFrame = new JFrame();
         readWriter = new ReadWriter("C:\\Users\\maxxw\\OneDrive\\Dokument\\NetBeansProjects\\theText.txt");
-        JDialog chooseContact = new JDialog(theFrame, "Choose contact", false);
+        chooseContact = new JDialog(theFrame, "Choose contact", false);
         chooseContact.setSize(new Dimension(30,10));
         
         
@@ -40,10 +39,10 @@ public class Client implements ItemListener, ActionListener{
         chooseContact.add(selection);
         selection.addItemListener(this);
         theFrame.setVisible(false);
+        chooseContact.pack();
+        theFrame.pack();
         chooseContact.setVisible(true);
         // Här ska jD skapas och allt ska matas in i socket
-
-        
     }
         
         public Socket getSocket(){
@@ -70,17 +69,17 @@ public class Client implements ItemListener, ActionListener{
             }
             else if(theName == "Choose"){}
             else{
-                    
+                    chooseContact.dispose();
                     Contact theContact = readWriter.findName(theName);
                     System.out.println("name found " +theContact.name);
-                try {
+                try{
                     socket = new Socket(theContact.IP, theContact.port);
                     System.out.println("socketcreated");
-                    ChatParticipant Golf = new ChatParticipant(socket);
+                    new ChatParticipant(socket);
                     System.out.println("golfe created");
                 } 
                 catch (IOException ex) {System.out.println(ex.getMessage());}
-
+                catch(Exception exc){exc.getMessage();}
         //            socket = new Socket(IP, theSocket);
         //            ChatParticipant Golf = new ChatParticipant(socket);
             }
