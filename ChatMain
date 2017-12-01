@@ -10,23 +10,29 @@ import java.net.*;
 
 /**
  *  KVAR:
- *  - SKROLLLLLL
+ * - gör läsare
+ * - göra metod som gör kontaktlista (array av contacts) 
+ * - fixa actionlistener till jcombo
+ *
  */
 public class ChatMain{
     public static void main(String[] args){
 //        ReadWriter rw;
 //        String dir = "C:\\Users\\maxxw\\OneDrive\\Dokument\\NetBeansProjects\\theText.txt";
 //        rw = new ReadWriter(dir);
-            boolean isServer = false;
-            int port = 58987;
+//        
+        try{
+          boolean isServer = false;
+            int port = 8889;
             if(isServer){
                 Server server = new Server(port);
                 isServer = !isServer;
             }
-        try{
-            String IP = InetAddress.getLocalHost().getHostAddress();
-            Client client = new Client(IP, port);
+            else{
+                String IP = InetAddress.getLocalHost().getHostAddress();
+                Client client = new Client();
+            }
         }
-        catch(IOException e){System.out.println(e.getMessage());}
+        catch(IOException e){System.out.println(e.getMessage());} 
     }
 }
