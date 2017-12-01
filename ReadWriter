@@ -4,12 +4,12 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class ReadWriter {
-    FileReader fileReader;
-    BufferedReader buffReader;
-    FileWriter fileWriter;
-    String dir;
-    ArrayList<String> theList;
-    ArrayList<Contact> contactList;
+    private FileReader fileReader;
+    private BufferedReader buffReader;
+    private FileWriter fileWriter;
+    private String dir;
+    private ArrayList<String> theList;
+    public  ArrayList<Contact> contactList;
     
     ReadWriter(String theDir){
         dir = theDir;
