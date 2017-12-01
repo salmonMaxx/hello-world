@@ -4,15 +4,17 @@ import java.io.*;
 import java.net.*;
 
 public class Server {
-    ServerSocket server;
-    Socket theSocket;
+    private ServerSocket server;
+    private Socket theSocket;
     
     Server(int portNumber){
         try{
             server = new ServerSocket(portNumber);
             theSocket = serverConnect();
             server.close();
-            ChatParticipant Rolf = new ChatParticipant(theSocket);
+            ChatParticipant rolf = new ChatParticipant(theSocket); //rolf
+            int adam = 5;
+            String max = new String("maxx");
         }
             catch(Exception e){e.getMessage();}
     }
